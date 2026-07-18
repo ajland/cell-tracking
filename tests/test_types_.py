@@ -6,7 +6,7 @@ import pytest
 from cell_tracking.types_ import ZarrChunk
 
 def test_zarr_chunk():
-    chunk_np = np.random.random((15, 15))
+    chunk_np = np.random.random((2, 3, 4))
     scale_np = np.random.random(3)
     timestamp = datetime.datetime.now()
 
@@ -21,6 +21,10 @@ def test_zarr_chunk():
     np.testing.assert_array_equal(volume.voxels, volume2.voxels)
     np.testing.assert_array_equal(volume.scale, volume2.scale)
     assert volume2.timestamp == timestamp
+
+    # Catch shape mismatch
+    with pytest.raises(ValueError):
+        ZarrChunk(chunk_np, np.array([1, 2]))
 
     # Expect Type error
     with pytest.raises(TypeError):
