@@ -16,5 +16,10 @@ class ZarrChunk(SensorData):
     )
     timestamp: datetime = Property(doc="An optional timestamp", default=None)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if len(self.voxels.shape) != len(self.scale):
+            raise ValueError("voxels has different dimensionalty than scale")
+
     def __bool__(self):
         return len(self.voxels) > 0
