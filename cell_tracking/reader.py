@@ -9,7 +9,7 @@ from stonesoup.reader.file import FileReader
 from stonesoup.reader.base import FrameReader
 from stonesoup.buffered_generator import BufferedGenerator
 
-from types_ import ZarrChunk
+from .types_ import ZarrChunk
 
 class ZarrReader(FileReader, FrameReader):
     '''ZarrReader reads volumes from zarr directory'''
@@ -52,7 +52,7 @@ class ZarrReader(FileReader, FrameReader):
 
             # ds = vol[::DOWNSAMPLE, ::DOWNSAMPLE, ::DOWNSAMPLE]
             timestamp = start_time + datetime.timedelta(seconds=t*time_scale)
-            yield ZarrChunk(voxels=vol, scale=scale, timestamp=timestamp)
+            yield timestamp, ZarrChunk(voxels=vol, scale=scale, timestamp=timestamp)
 
 if __name__ == '__main__':
     reader = ZarrReader(path='data/dense_channel/train/44b6_f28707c6.zarr')
