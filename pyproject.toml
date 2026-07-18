@@ -1,0 +1,89 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "cell-tracking"
+dynamic = ["version"]
+description = 'Cell tracking code based on Stone Soup for the Biohub - Cell Tracking During Development kaggle competition'
+readme = "README.md"
+requires-python = "~=3.12.0"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Austin", email = "" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "numpy",
+  "tracksdata @ git+https://github.com/royerlab/tracksdata@main",
+  "zarr",
+  "scipy",
+  "tqdm",
+  "stonesoup"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[project.urls]
+Documentation = "https://github.com/Austin/cell-tracking#readme"
+Issues = "https://github.com/Austin/cell-tracking/issues"
+Source = "https://github.com/Austin/cell-tracking"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:cell_tracking tests}"
+
+[tool.hatch.envs.test]
+python="3.12"
+dependencies = [
+    "pytest",
+    "coverage[toml]",
+    "pytest-cov",
+]
+
+[tool.hatch.envs.test.scripts]
+test = "pytest {args:tests}"
+cov-run = "coverage run -m pytest {args:tests}"
+cov-report = ["coverage combine", "coverage report"]
+cov = 'pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=pkg --cov=tests'
+
+[tool.coverage.run]
+source_pkgs = ["cell_tracking", "tests"]
+branch = true
+parallel = true
+omit = [
+  "cell_tracking/__about__.py",
+]
+
+[tool.coverage.paths]
+cell_tracking = ["cell_tracking", "*/cell-tracking/cell_tracking"]
+tests = ["tests", "*/cell-tracking/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.build.targets.wheel]
+  packages = ["cell_tracking"]
