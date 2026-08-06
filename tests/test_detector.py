@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import numpy as np
 import pytest
+from stonesoup.models.measurement.linear import LinearGaussian
 
 from cell_tracking.types_ import ZarrChunk
 from cell_tracking.detector import BinaryChunkDetector
@@ -28,8 +29,11 @@ class DummyFeeder:
     ],
 )
 def test_number_of_detections(image, expected_count):
-
-    detector = BinaryChunkDetector(DummyFeeder(image))
+    measurement_model = LinearGaussian(noise_covar=np.diag([1,2,3]),
+                                       ndim_state=6,
+                                       mapping=(0, 2, 4))
+    detector = BinaryChunkDetector(DummyFeeder(image),
+                                   measurement_model=measurement_model)
 
     _, detections = next(iter(detector))
 

@@ -4,11 +4,18 @@ from collections.abc import Iterator
 import numpy as np
 from scipy.ndimage import label
 from ordered_set import OrderedSet
+from stonesoup.base import Property
 from stonesoup.buffered_generator import BufferedGenerator
 from stonesoup.types.detection import Detection
 from stonesoup.detector import Detector
+from stonesoup.models.measurement import MeasurementModel
 
 class BinaryChunkDetector(Detector):
+    measurement_model: MeasurementModel = Property(
+        doc="Measurement model used to generate detections",
+        default=None
+    )
+
     @BufferedGenerator.generator_method
     def detections_gen(self) -> Iterator[tuple[datetime.datetime, OrderedSet[Detection]]]:
         """Returns a generator of detections for each time step.
@@ -44,6 +51,7 @@ class BinaryChunkDetector(Detector):
                 detections.add(
                     Detection(state_vector=centroid,
                               timestamp=timestamp,
+                              measurement_model=self.measurement_model,
                               metadata=metadata)
                 )
                 t+=1
