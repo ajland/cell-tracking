@@ -29,7 +29,8 @@ dependencies = [
   "zarr",
   "scipy",
   "tqdm",
-  "stonesoup"
+  "stonesoup",
+  "pandas"
 ]
 
 [project.optional-dependencies]
@@ -44,6 +45,13 @@ Source = "https://github.com/Austin/cell-tracking"
 
 [tool.hatch.version]
 source = "vcs"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "my-package",
+  "my-package[dev]",
+  "ipykernel"
+]
 
 [tool.hatch.envs.types]
 extra-dependencies = [
